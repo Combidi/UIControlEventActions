@@ -72,7 +72,9 @@ final class UIControl_eventActionsTests: XCTestCase {
     }
 }
 
-extension UIControl {
+// MARK: - Helpers
+
+private extension UIControl {
     func simulate(event: UIControl.Event) {
         allTargets.forEach { target in
             actions(forTarget: target, forControlEvent: event)?.forEach {
