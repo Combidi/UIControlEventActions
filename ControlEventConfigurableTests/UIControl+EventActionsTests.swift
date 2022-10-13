@@ -9,11 +9,23 @@ private var AssociatedHandle: UInt8 = 0
 
 extension UIControl {
     
-    func addAction(forEvent event: Event, action: @escaping () -> Void) {
+    struct EventAction {
+        private let _remove: () -> Void
+        
+        init(remove: @escaping () -> Void) {
+            _remove = remove
+        }
+        func remove() {
+            _remove()
+        }
+    }
+    
+    @discardableResult
+    func addAction(forEvent event: Event, action: @escaping () -> Void) -> EventAction {
         setListener(event: event, action: action)
     }
     
-    private func setListener(event: Event, action: @escaping () -> Void) {
+    private func setListener(event: Event, action: @escaping () -> Void) -> EventAction {
         configurator.setListenerFor(control: self, event: event, action: action)
     }
     
@@ -33,22 +45,36 @@ extension UIControl {
 }
 
 private final class Configurator {
-    private var listeners = [Listener]()
+    private var listeners = Set<Listener>()
 
-    func setListenerFor(control: UIControl, event: UIControl.Event, action: @escaping () -> Void) {
-        listeners.append(Listener(control: control, for: event, action: action))
+    func setListenerFor(control: UIControl, event: UIControl.Event, action: @escaping () -> Void) -> UIControl.EventAction {
+        let listener = Listener(control: control, for: event, action: action)
+        listeners.insert(listener)
+        
+        return UIControl.EventAction { [weak self] in
+            listener.deregister()
+            self?.listeners.remove(listener)
+        }
     }
 }
 
 private final class Listener: NSObject {
     private let action: () -> Void
+    private let control: UIControl
+    private let event: UIControl.Event
     
     init(control: UIControl, for event: UIControl.Event, action: @escaping () -> Void) {
         self.action = action
+        self.control = control
+        self.event = event
         super.init()
         control.addTarget(self, action: #selector(execute), for: event)
     }
-        
+    
+    func deregister() {
+        control.removeTarget(self, action: #selector(execute), for: event)
+    }
+    
     @objc func execute() {
         action()
     }
@@ -61,7 +87,7 @@ final class UIControl_eventActionsTests: XCTestCase {
         let button = UIButton()
         
         var callCount = 0
-        button.addAction(forEvent: .touchUpInside) {
+        let action = button.addAction(forEvent: .touchUpInside) {
             callCount += 1
         }
         
@@ -74,6 +100,11 @@ final class UIControl_eventActionsTests: XCTestCase {
         button.simulate(event: .touchUpOutside)
         
         XCTAssertEqual(callCount, 1, "Expect action not to be executed other control events")
+        
+        action.remove()
+        button.simulate(event: .touchUpInside)
+
+        XCTAssertEqual(callCount, 1, "Expect action not to be executed once removed")
     }
     
     func test_addAction_forMultipleEvents() {
