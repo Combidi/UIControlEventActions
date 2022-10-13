@@ -11,7 +11,6 @@ extension UIControl.Event: Hashable {}
 
 extension UIControl {
     
-    @discardableResult
     func addAction(forEvent event: Event, action: @escaping () -> Void) {
         setListener(event: event, action: action)
     }
@@ -36,10 +35,10 @@ extension UIControl {
 }
 
 private final class Configurator {
-    private var listeners: [UIControl.Event: Listener] = [:]
+    private var listeners = [Listener]()
 
     func setListenerFor(control: UIControl, event: UIControl.Event, action: @escaping () -> Void) {
-        listeners[event] = Listener(control: control, for: event, action: action)
+        listeners.append(Listener(control: control, for: event, action: action))
     }
 }
 
@@ -97,6 +96,24 @@ final class UIControl_eventActionsTests: XCTestCase {
 
         XCTAssertEqual(callCount_touchUpInside, 1)
         XCTAssertEqual(callCount_touchUpOutside, 1)
+    }
+    
+    func test_addMultipleActionsPerEvent() {
+        
+        let button = UIButton()
+        
+        var callCount = 0
+        button.addAction(forEvent: .touchUpInside) {
+            callCount += 1
+        }
+
+        button.addAction(forEvent: .touchUpInside) {
+            callCount += 1
+        }
+
+        button.simulate(event: .touchUpInside)
+
+        XCTAssertEqual(callCount, 2)
     }
 }
 
