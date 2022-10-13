@@ -4,7 +4,7 @@
 
 import XCTest
 import UIKit
-import ControlEventConfigurable
+import UIControlEventActions
 
 final class UIControl_eventActionsTests: XCTestCase {
     
