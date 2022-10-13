@@ -22,11 +22,11 @@ public extension UIControl {
     
     @discardableResult
     func addAction(forEvent event: Event, action: @escaping () -> Void) -> EventAction {
-        setListener(event: event, action: action)
+        addListener(event: event, action: action)
     }
     
-    private func setListener(event: Event, action: @escaping () -> Void) -> EventAction {
-        configurator.setListenerFor(control: self, event: event, action: action)
+    private func addListener(event: Event, action: @escaping () -> Void) -> EventAction {
+        configurator.addListenerFor(control: self, event: event, action: action)
     }
     
     private var configurator: Configurator {
@@ -47,7 +47,7 @@ public extension UIControl {
 private final class Configurator {
     private var listeners = Set<Listener>()
 
-    func setListenerFor(control: UIControl, event: UIControl.Event, action: @escaping () -> Void) -> UIControl.EventAction {
+    func addListenerFor(control: UIControl, event: UIControl.Event, action: @escaping () -> Void) -> UIControl.EventAction {
         let listener = Listener(control: control, for: event, action: action)
         listeners.insert(listener)
         
