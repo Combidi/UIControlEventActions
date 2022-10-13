@@ -4,10 +4,9 @@
 
 import UIKit
 
-private var AssociatedHandle: UInt8 = 0
+private var ConfiguratorKey: UInt8 = 0
 
 public extension UIControl {
-    
     struct EventAction {
         private let _remove: () -> Void
         
@@ -34,12 +33,12 @@ public extension UIControl {
     }
 
     private func getConfigurator() -> Configurator? {
-        objc_getAssociatedObject(self, &AssociatedHandle) as? Configurator
+        objc_getAssociatedObject(self, &ConfiguratorKey) as? Configurator
     }
     
     private func setupConfigurator() -> Configurator {
         let eventHandler = Configurator()
-        objc_setAssociatedObject(self, &AssociatedHandle, eventHandler, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(self, &ConfiguratorKey, eventHandler, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return eventHandler
     }
 }
