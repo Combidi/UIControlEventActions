@@ -2,6 +2,8 @@
 
 Add closure based callbacks for all available UIControl.Events as an alternative to the default target-action pattern
 
+Note: This might no longer be usefull since Apple introduced their own closure based API's in iOS 14
+
 ## Usage
 
     // Adding actions
