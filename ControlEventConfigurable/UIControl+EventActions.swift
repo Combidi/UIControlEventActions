@@ -26,7 +26,7 @@ public extension UIControl {
     }
     
     private func addListener(event: Event, action: @escaping () -> Void) -> EventAction {
-        configurator.addListenerFor(control: self, event: event, action: action)
+        configurator.addEventHandlerFor(control: self, event: event, action: action)
     }
     
     private var configurator: Configurator {
@@ -45,20 +45,20 @@ public extension UIControl {
 }
 
 private final class Configurator {
-    private var listeners = Set<Listener>()
+    private var eventHandlers = Set<EventHandler>()
 
-    func addListenerFor(control: UIControl, event: UIControl.Event, action: @escaping () -> Void) -> UIControl.EventAction {
-        let listener = Listener(control: control, for: event, action: action)
-        listeners.insert(listener)
+    func addEventHandlerFor(control: UIControl, event: UIControl.Event, action: @escaping () -> Void) -> UIControl.EventAction {
+        let eventHandler = EventHandler(control: control, for: event, action: action)
+        eventHandlers.insert(eventHandler)
         
         return UIControl.EventAction { [weak self] in
-            listener.deregister()
-            self?.listeners.remove(listener)
+            eventHandler.deregister()
+            self?.eventHandlers.remove(eventHandler)
         }
     }
 }
 
-private final class Listener: NSObject {
+private final class EventHandler: NSObject {
     private let action: () -> Void
     private let control: UIControl
     private let event: UIControl.Event
