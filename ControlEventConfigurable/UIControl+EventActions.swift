@@ -1,0 +1,81 @@
+//
+//  Created by Peter Combee on 13/10/2022.
+//
+
+import UIKit
+
+private var AssociatedHandle: UInt8 = 0
+
+public extension UIControl {
+    
+    struct EventAction {
+        private let _remove: () -> Void
+        
+        init(remove: @escaping () -> Void) {
+            _remove = remove
+        }
+        
+        public func remove() {
+            _remove()
+        }
+    }
+    
+    @discardableResult
+    func addAction(forEvent event: Event, action: @escaping () -> Void) -> EventAction {
+        setListener(event: event, action: action)
+    }
+    
+    private func setListener(event: Event, action: @escaping () -> Void) -> EventAction {
+        configurator.setListenerFor(control: self, event: event, action: action)
+    }
+    
+    private var configurator: Configurator {
+        getConfigurator() ?? setupConfigurator()
+    }
+
+    private func getConfigurator() -> Configurator? {
+        objc_getAssociatedObject(self, &AssociatedHandle) as? Configurator
+    }
+    
+    private func setupConfigurator() -> Configurator {
+        let eventHandler = Configurator()
+        objc_setAssociatedObject(self, &AssociatedHandle, eventHandler, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return eventHandler
+    }
+}
+
+private final class Configurator {
+    private var listeners = Set<Listener>()
+
+    func setListenerFor(control: UIControl, event: UIControl.Event, action: @escaping () -> Void) -> UIControl.EventAction {
+        let listener = Listener(control: control, for: event, action: action)
+        listeners.insert(listener)
+        
+        return UIControl.EventAction { [weak self] in
+            listener.deregister()
+            self?.listeners.remove(listener)
+        }
+    }
+}
+
+private final class Listener: NSObject {
+    private let action: () -> Void
+    private let control: UIControl
+    private let event: UIControl.Event
+    
+    init(control: UIControl, for event: UIControl.Event, action: @escaping () -> Void) {
+        self.action = action
+        self.control = control
+        self.event = event
+        super.init()
+        control.addTarget(self, action: #selector(execute), for: event)
+    }
+    
+    func deregister() {
+        control.removeTarget(self, action: #selector(execute), for: event)
+    }
+    
+    @objc func execute() {
+        action()
+    }
+}

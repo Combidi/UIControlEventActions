@@ -14,6 +14,7 @@
 		D01876FA2701F91100A9E5F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D01876F92701F91100A9E5F5 /* Assets.xcassets */; };
 		D01876FD2701F91100A9E5F5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D01876FB2701F91100A9E5F5 /* LaunchScreen.storyboard */; };
 		D048070528F822FC0093475F /* UIControl+EventActionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D048070428F822FC0093475F /* UIControl+EventActionsTests.swift */; };
+		D048070C28F8A1030093475F /* UIControl+EventActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D048070B28F8A1030093475F /* UIControl+EventActions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		D01876FE2701F91100A9E5F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D048070228F822FC0093475F /* ControlEventConfigurableTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ControlEventConfigurableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D048070428F822FC0093475F /* UIControl+EventActionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+EventActionsTests.swift"; sourceTree = "<group>"; };
+		D048070B28F8A1030093475F /* UIControl+EventActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+EventActions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +87,7 @@
 				D01876F92701F91100A9E5F5 /* Assets.xcassets */,
 				D01876FB2701F91100A9E5F5 /* LaunchScreen.storyboard */,
 				D01876FE2701F91100A9E5F5 /* Info.plist */,
+				D048070B28F8A1030093475F /* UIControl+EventActions.swift */,
 			);
 			path = ControlEventConfigurable;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D048070C28F8A1030093475F /* UIControl+EventActions.swift in Sources */,
 				D01876F52701F90F00A9E5F5 /* ViewController.swift in Sources */,
 				D01876F12701F90F00A9E5F5 /* AppDelegate.swift in Sources */,
 				D01876F32701F90F00A9E5F5 /* SceneDelegate.swift in Sources */,
