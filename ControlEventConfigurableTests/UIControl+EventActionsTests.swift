@@ -7,8 +7,6 @@ import UIKit
 
 private var AssociatedHandle: UInt8 = 0
 
-extension UIControl.Event: Hashable {}
-
 extension UIControl {
     
     func addAction(forEvent event: Event, action: @escaping () -> Void) {
