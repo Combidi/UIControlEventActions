@@ -22,11 +22,11 @@ public extension UIControl {
     
     @discardableResult
     func addAction(forEvent event: Event, action: @escaping () -> Void) -> EventAction {
-        addListener(event: event, action: action)
+        addHandler(forEvent: event, action: action)
     }
     
-    private func addListener(event: Event, action: @escaping () -> Void) -> EventAction {
-        configurator.addEventHandler(forControl: self, event: event, action: action)
+    private func addHandler(forEvent: Event, action: @escaping () -> Void) -> EventAction {
+        configurator.addEventHandler(forControl: self, event: forEvent, action: action)
     }
     
     private var configurator: Configurator {
