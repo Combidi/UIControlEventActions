@@ -7,10 +7,11 @@ import UIKit
 import UIControlEventActions
 
 final class UIControl_eventActionsTests: XCTestCase {
-    
+        
     func test_addAction_executesActionOnButtonTap() {
         
         let button = UIButton()
+        trackForMemoryLeaks(button)
         
         var callCount = 0
         let action = button.addAction(forEvent: .touchUpInside) {
@@ -36,6 +37,8 @@ final class UIControl_eventActionsTests: XCTestCase {
     func test_addAction_forMultipleEvents() {
         
         let button = UIButton()
+        trackForMemoryLeaks(button)
+
         var callCount_touchUpInside = 0
         button.addAction(forEvent: .touchUpInside) {
             callCount_touchUpInside += 1
@@ -56,7 +59,8 @@ final class UIControl_eventActionsTests: XCTestCase {
     func test_addMultipleActionsPerEvent() {
         
         let button = UIButton()
-        
+        trackForMemoryLeaks(button)
+
         var callCount = 0
         button.addAction(forEvent: .touchUpInside) {
             callCount += 1
@@ -80,6 +84,14 @@ private extension UIControl {
             actions(forTarget: target, forControlEvent: event)?.forEach {
                 (target as NSObject).perform(Selector($0))
             }
+        }
+    }
+}
+
+extension XCTestCase {
+    func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #file, line: UInt = #line) {
+        addTeardownBlock { [weak instance] in
+            XCTAssertNil(instance, "Instance should have been delocated. Potential memory leak", file: file, line: line)
         }
     }
 }

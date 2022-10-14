@@ -59,7 +59,7 @@ private final class Configurator {
 
 private final class EventHandler: NSObject {
     private let action: () -> Void
-    private let control: UIControl
+    private unowned let control: UIControl
     private let event: UIControl.Event
     
     init(control: UIControl, for event: UIControl.Event, action: @escaping () -> Void) {
