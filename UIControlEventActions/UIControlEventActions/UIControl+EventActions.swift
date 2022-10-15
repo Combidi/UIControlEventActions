@@ -47,11 +47,13 @@ private final class Configurator {
     private var eventHandlers = Set<EventHandler>()
 
     func addEventHandler(forControl control: UIControl, event: UIControl.Event, action: @escaping () -> Void) -> UIControl.EventAction {
-        let eventHandler = EventHandler(control: control, for: event, action: action)
+        let eventHandler = EventHandler(for: event, action: action)
+        eventHandler.register(control: control)
         eventHandlers.insert(eventHandler)
         
-        return UIControl.EventAction { [weak self] in
-            eventHandler.deregister()
+        return UIControl.EventAction { [weak self, weak control] in
+            guard let control = control else { return }
+            eventHandler.deregister(control: control)
             self?.eventHandlers.remove(eventHandler)
         }
     }
@@ -59,18 +61,19 @@ private final class Configurator {
 
 private final class EventHandler: NSObject {
     private let action: () -> Void
-    private unowned let control: UIControl
     private let event: UIControl.Event
     
-    init(control: UIControl, for event: UIControl.Event, action: @escaping () -> Void) {
+    init(for event: UIControl.Event, action: @escaping () -> Void) {
         self.action = action
-        self.control = control
         self.event = event
         super.init()
+    }
+    
+    func register(control: UIControl) {
         control.addTarget(self, action: #selector(execute), for: event)
     }
     
-    func deregister() {
+    func deregister(control: UIControl) {
         control.removeTarget(self, action: #selector(execute), for: event)
     }
     

@@ -74,6 +74,17 @@ final class UIControl_eventActionsTests: XCTestCase {
 
         XCTAssertEqual(callCount, 2)
     }
+    
+    func test_removeActionForDeallocatedControl_hasNoSideEffects() {
+        
+        var button: UIButton! = UIButton()
+
+        let action = button.addAction(forEvent: .touchDown) {}
+        
+        button = nil
+        
+        action.remove()
+    }
 }
 
 // MARK: - Helpers
