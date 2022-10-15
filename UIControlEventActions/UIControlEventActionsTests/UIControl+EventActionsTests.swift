@@ -10,8 +10,7 @@ final class UIControl_eventActionsTests: XCTestCase {
         
     func test_addAction_executesActionOnButtonTap() {
         
-        let button = UIButton()
-        trackForMemoryLeaks(button)
+        let button = makeButton()
         
         var callCount = 0
         let action = button.addAction(forEvent: .touchUpInside) {
@@ -36,8 +35,7 @@ final class UIControl_eventActionsTests: XCTestCase {
     
     func test_canAddActionForMultipleEvents() {
         
-        let button = UIButton()
-        trackForMemoryLeaks(button)
+        let button = makeButton()
 
         var callCount_touchUpInside = 0
         button.addAction(forEvent: .touchUpInside) {
@@ -58,8 +56,7 @@ final class UIControl_eventActionsTests: XCTestCase {
     
     func test_canAddMultipleActionsPerEvent() {
         
-        let button = UIButton()
-        trackForMemoryLeaks(button)
+        let button = makeButton()
 
         var callCount = 0
         button.addAction(forEvent: .touchUpInside) {
@@ -77,13 +74,21 @@ final class UIControl_eventActionsTests: XCTestCase {
     
     func test_removeActionForDeallocatedControl_hasNoSideEffects() {
         
-        var button: UIButton! = UIButton()
+        var button: UIButton! = makeButton()
 
         let action = button.addAction(forEvent: .touchDown) {}
         
         button = nil
         
         action.remove()
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeButton() -> UIButton {
+        let button = UIButton()
+        trackForMemoryLeaks(button)
+        return button
     }
 }
 
