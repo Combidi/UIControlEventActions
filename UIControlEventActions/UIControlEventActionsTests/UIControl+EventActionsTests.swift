@@ -34,7 +34,7 @@ final class UIControl_eventActionsTests: XCTestCase {
         XCTAssertEqual(callCount, 1, "Expect action not to be executed once removed")
     }
     
-    func test_addAction_forMultipleEvents() {
+    func test_canAddActionForMultipleEvents() {
         
         let button = UIButton()
         trackForMemoryLeaks(button)
