@@ -56,7 +56,7 @@ final class UIControl_eventActionsTests: XCTestCase {
         XCTAssertEqual(callCount_touchUpOutside, 1)
     }
     
-    func test_addMultipleActionsPerEvent() {
+    func test_canAddMultipleActionsPerEvent() {
         
         let button = UIButton()
         trackForMemoryLeaks(button)
